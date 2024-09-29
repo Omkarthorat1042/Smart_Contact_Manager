@@ -13,25 +13,15 @@ public class CustomUserDetails implements UserDetails{
 
 	private User user;
 	
-	
-	
-	
 	public CustomUserDetails(User user) {
 		super();
 		this.user = user;
 	}
 	
-	
-	
-	
-
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		
-	SimpleGrantedAuthority simpleGrantedAuthority =	new SimpleGrantedAuthority(user.getRole()); 
 	
-	
-		
+		SimpleGrantedAuthority simpleGrantedAuthority =	new SimpleGrantedAuthority(user.getRole()); 
 		
 		return List.of(simpleGrantedAuthority);
 	}
@@ -39,8 +29,7 @@ public class CustomUserDetails implements UserDetails{
 	@Override
 	public boolean isAccountNonExpired() {
 
-
-		return true;
+			return true;
 	}
 
 	@Override
