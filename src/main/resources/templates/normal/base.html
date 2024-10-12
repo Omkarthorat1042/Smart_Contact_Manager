@@ -12,9 +12,12 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
 	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
 	crossorigin="anonymous">
-	
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-	
+
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+	integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 <link rel="stylesheet" th:href="@{/css/style.css}" />
 <title th:text="${title}"></title>
 </head>
@@ -65,17 +68,22 @@
 
 
 
-	<div class="sidebar">
+	<div class="sidebar mt-1">
 
-		<span onclick="toggleSidebar()" class="crossBtn"> &times;</span>
-		
-		<a href="#" th:href="@{/user/index}" class="item"> <i class="fa-solid fa-house-chimney"></i>  Home</a> 
-		<a href="#" class="item"> <i class="fas fa-id-card-alt"></i>  View Contacts</a> 
-		<a href="#" th:href="@{/user/add-contact}" class="item"> <i class="fa-solid fa-mobile-retro"></i>  Add Contact</a> 
-		<a href="#" class="item"> <i class="fa-solid fa-user"></i>  Your profile</a> 
-		<a href="#" class="item"> <i class="fa-solid fa-gear"></i>  Settings</a> 
-		
-<a href="#" th:href="@{/logout}" class="item"> <i class="fa-solid fa-right-from-bracket"></i>  Logout</a>
+		<span onclick="toggleSidebar()" class="crossBtn"> &times;</span> <a
+			href="#" th:href="@{/user/index}" class="item"> <i
+			class="fa-solid fa-house-chimney"></i> Home
+		</a> <a href="#" class="item"> <i class="fas fa-id-card-alt"></i> View
+			Contacts
+		</a> <a href="#" th:href="@{/user/add-contact}" class="item"> <i
+			class="fa-solid fa-mobile-retro"></i> Add Contact
+		</a> <a href="#" class="item"> <i class="fa-solid fa-user"></i> Your
+			profile
+		</a> <a href="#" class="item"> <i class="fa-solid fa-gear"></i>
+			Settings
+		</a> <a href="#" th:href="@{/logout}" class="item"> <i
+			class="fa-solid fa-right-from-bracket"></i> Logout
+		</a>
 		<div class="divider"></div>
 
 	</div>
@@ -83,8 +91,8 @@
 
 
 
-	<div class="content">
-	
+	<div class="content mt-3">
+
 		<i onclick="toggleSidebar()" class="fas fa-bars m-3"></i>
 		<div th:replace="${content}"></div>
 
