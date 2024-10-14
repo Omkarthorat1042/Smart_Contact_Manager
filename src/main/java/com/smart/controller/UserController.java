@@ -6,22 +6,28 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
+import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.smart.doa.ContactRepository;
 import com.smart.doa.UserRepository;
 import com.smart.entities.Contact;
 import com.smart.entities.User;
@@ -30,112 +36,111 @@ import com.smart.entities.User;
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
-    // method for hiding common data
-    @ModelAttribute
-    public void addCommonData(Model model, Principal principal) {
+	@Autowired
+	private ContactRepository contactRepository;
 
-        String username = principal.getName();
-        System.out.println("USERNAME: " + username);
+	// method for hiding common data
+	@ModelAttribute
+	public void addCommonData(Model model, Principal principal) {
 
-        // get the user using username
-        User user = userRepository.getUserByUserName(username);
-        System.out.println("USER: " + user);
+		String username = principal.getName();
+		System.out.println("USERNAME: " + username);
 
-        model.addAttribute("user", user);
-    }
+		// get the user using username
+		User user = userRepository.getUserByUserName(username);
+		System.out.println("USER: " + user);
 
-    // Dashboard home
-    @RequestMapping("/index")
-    public String dashboard(Model model, Principal principal) {
-        model.addAttribute("title", "User Dashboard");
-        return "normal/user_dashboard";
-    }
+		model.addAttribute("user", user);
+	}
 
-    // Open add-contact form handler
-    @GetMapping("/add-contact")
-    public String openAddContactForm(Model model) {
-        model.addAttribute("title", "Add Contact");
-        model.addAttribute("contact", new Contact());
-        return "normal/add_contact_form";
-    }
+	// Dashboard home
+	@RequestMapping("/index")
+	public String dashboard(Model model, Principal principal) {
+		model.addAttribute("title", "User Dashboard");
+		return "normal/user_dashboard";
+	}
 
-    // Process the add-contact form
-    @PostMapping("/process-contact")
-    public String processContact(@Valid @ModelAttribute Contact contact,
-                                 BindingResult result, 
-                                 @RequestParam("profileImage") MultipartFile file,
-                                 Principal principal,
-                                 Model model,
-                                 RedirectAttributes redirectAttributes) {
+	// Open add-contact form handler
+	@GetMapping("/add-contact")
+	public String openAddContactForm(Model model) {
+		model.addAttribute("title", "Add Contact");
+		model.addAttribute("contact", new Contact());
+		return "normal/add_contact_form";
+	}
 
-        try {
-            // Validation error handling
-            if (result.hasErrors()) {
-                model.addAttribute("contact", contact);
-                return "normal/add_contact_form"; // Return form with errors
-            }
+	// Process the add-contact form
+	@PostMapping("/process-contact")
+	public String processContact(@Valid @ModelAttribute Contact contact, BindingResult result,
+			@RequestParam("profileImage") MultipartFile file, Principal principal, Model model,
+			RedirectAttributes redirectAttributes) {
 
-            String name = principal.getName();
-            User user = this.userRepository.getUserByUserName(name);
+		try {
+			// Validation error handling
+			if (result.hasErrors()) {
+				model.addAttribute("contact", contact);
+				return "normal/add_contact_form"; // Return form with errors
+			}
 
-            // Process and upload image file
-            if (file.isEmpty()) {
-                System.out.println("Image is empty");
-                contact.setImage("default.png"); // Set a default image
-            } else {
-                contact.setImage(file.getOriginalFilename());
+			String name = principal.getName();
+			User user = this.userRepository.getUserByUserName(name);
 
-                File saveFile = new ClassPathResource("static/img").getFile();
-                Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + file.getOriginalFilename());
-                Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-                System.out.println("Image is uploaded");
-            }
+			// Process and upload image file
+			if (file.isEmpty()) {
+				System.out.println("Image is empty");
+				contact.setImage("default.png"); // Set a default image
+			} else {
+				contact.setImage(file.getOriginalFilename());
 
-            contact.setUser(user);
-            user.getContacts().add(contact);
-            this.userRepository.save(user); // Save the contact
+				File saveFile = new ClassPathResource("static/img").getFile();
+				Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + file.getOriginalFilename());
+				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+				System.out.println("Image is uploaded");
+			}
 
-            System.out.println("DATA: " + contact);
-            System.out.println("Added data to the database");
+			contact.setUser(user);
+			user.getContacts().add(contact);
+			this.userRepository.save(user); // Save the contact
 
-            // Add success message
-            redirectAttributes.addFlashAttribute("message", "Contact saved successfully!");
+			System.out.println("DATA: " + contact);
+			System.out.println("Added data to the database");
 
-        } catch (Exception e) {
-            System.out.println("ERROR: " + e.getMessage());
-            e.printStackTrace();
-            redirectAttributes.addFlashAttribute("message", "Error saving contact. Please try again.");
-        }
+			// Add success message
+			redirectAttributes.addFlashAttribute("message", "Contact saved successfully!");
 
-        // Redirect back to the add-contact page
-        return "redirect:/user/add-contact";
-    }
-    
-    //show contact module or handler
-    @GetMapping("/show-contacts")
-    public String showContacts(Model m) {
-    	return "normal/show_contacts";
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+		} catch (Exception e) {
+			System.out.println("ERROR: " + e.getMessage());
+			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("message", "Error saving contact. Please try again.");
+		}
+
+		// Redirect back to the add-contact page
+		return "redirect:/user/add-contact";
+	}
+
+	// show contacts handler
+	// per page = 5[n]
+	// current page = 0 [page]
+	@GetMapping("/show-contacts/{page}")
+	public String showContacts(@PathVariable("page") Integer page, Model m, Principal principal) {
+		m.addAttribute("title", "Show user contacts...");
+
+		String userName = principal.getName();
+
+		User user = this.userRepository.getUserByUserName(userName);
+
+		Pageable pageable = PageRequest.of(page, 5);
+
+		Page<Contact> contacts = this.contactRepository.findContactsByUser(user.getId(), pageable);
+
+		m.addAttribute("contacts", contacts);
+		m.addAttribute("currentPage", page);
+
+		m.addAttribute("totalPages", contacts.getTotalPages());
+
+		return "normal/show_contacts";
+	}
+
 }
