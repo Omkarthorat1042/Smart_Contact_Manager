@@ -7,7 +7,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,7 @@ import com.smart.doa.ContactRepository;
 import com.smart.doa.UserRepository;
 import com.smart.entities.Contact;
 import com.smart.entities.User;
+import com.smart.helper.Message;
 
 @Controller
 @RequestMapping("/user")
@@ -90,7 +93,7 @@ public class UserController {
 			// Process and upload image file
 			if (file.isEmpty()) {
 				System.out.println("Image is empty");
-				contact.setImage("default.png"); // Set a default image
+				contact.setImage("contact.png"); // Set a default image
 			} else {
 				contact.setImage(file.getOriginalFilename());
 
@@ -141,6 +144,46 @@ public class UserController {
 		m.addAttribute("totalPages", contacts.getTotalPages());
 
 		return "normal/show_contacts";
+	}
+
+	@RequestMapping("/{cid}/contact")
+	public String showContactDetail(@PathVariable("cid") Integer cid, Model model, Principal principal) {
+
+		System.out.println("CID" + cid);
+
+		Optional<Contact> contactOptional = this.contactRepository.findById(cid);
+
+		Contact contact = contactOptional.get();
+
+		String userName = principal.getName();
+
+		User user = this.userRepository.getUserByUserName(userName);
+
+		if (user.getId() == contact.getUser().getId()) {
+
+			model.addAttribute("contact", contact);
+		}
+
+		return "normal/contact_detail";
+	}
+
+	// delete handler
+	@GetMapping("/delete/{cid}")
+	public String deleteContact(@PathVariable("cid") Integer cid, Model model, HttpSession session) {
+
+		Optional<Contact> contactOptional = this.contactRepository.findById(cid);
+
+		Contact contact = contactOptional.get();
+
+		// check..
+
+		contact.setUser(null);
+
+		this.contactRepository.delete(contact);
+
+		session.setAttribute("message", new Message("Contact deleted  successfully", "success"));
+
+		return "redirect:/user/show-contacts/0";
 	}
 
 }
