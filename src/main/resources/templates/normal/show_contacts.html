@@ -9,6 +9,12 @@
 	<section>
 		<div class="card mr-3 ml-3">
 			<div class="card-body">
+
+				<div th:if="${message != null}" class="alert"
+					th:classappend="${message.type == 'success' ? 'alert-success' : 'alert-danger'}"
+					role="alert">
+					<span th:text="${message.content}"></span>
+				</div>
 				<h1 class="text-center">Your Contacts</h1>
 				<table class="table">
 					<thead>
@@ -32,14 +38,22 @@
 									th:text="${c.email}"></span>
 							</a></td>
 							<td th:text="${c.phone}"></td>
-							<td><a th:href="@{'/user/delete/' + ${c.cid}}"
+							<td>
+							
+							<a th:href="@{'/user/delete/' + ${c.cid}}"
 								class="btn btn-danger btn-sm"> <i class="fa-solid fa-trash"></i>
 									Delete
 							</a>
+							
+							
+							<form method="post" th:action="@{'/user/update-contact/'+${c.cid}}" class="mt-2">
 
-								<button class="btn btn-primary btn-sm">
+								<button type="submit" class="btn btn-primary btn-sm">
 									<i class="fa-solid fa-pen-nib"></i> Update
-								</button></td>
+								</button>
+								
+							</form>
+								</td>
 						</tr>
 					</tbody>
 				</table>
