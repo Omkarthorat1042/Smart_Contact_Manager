@@ -1,6 +1,4 @@
-<<<<<<< HEAD
-"# Smart Contact Manager" 
-=======
+
 # Smart Contact Manager
 
 ## Overview
@@ -24,4 +22,4 @@ Smart Contact Manager is a web application built with Spring Boot, Thymeleaf, an
 1. Clone the repository:
    ```bash
    git clone https://github.com/yourusername/Smart_Contact_Manager.git
->>>>>>> d56265f0ca3ff30a589703d9e0d22ed5061db555
+
