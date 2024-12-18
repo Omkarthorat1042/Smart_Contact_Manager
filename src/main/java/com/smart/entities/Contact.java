@@ -11,6 +11,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "CONTACT")
 public class Contact {
@@ -46,6 +48,7 @@ public class Contact {
 	private String description;
 	
 	@ManyToOne
+	@JsonIgnore
 	private User user;
 	
 	
@@ -132,6 +135,12 @@ public class Contact {
 //				+ email + ", image=" + image + ", phone=" + phone + ", description=" + description + ", user=" + user
 //				+ "]";
 //	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		
+		return this.cid==((Contact)obj).getCid();
+	}
 	
 	
 	

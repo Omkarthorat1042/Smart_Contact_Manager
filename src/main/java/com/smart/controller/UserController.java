@@ -170,7 +170,7 @@ public class UserController {
 
 	// delete handler
 	@GetMapping("/delete/{cid}")
-	public String deleteContact(@PathVariable("cid") Integer cid, Model model, HttpSession session) {
+	public String deleteContact(@PathVariable("cid") Integer cid, Model model, HttpSession session, Principal principal) {
 
 		Optional<Contact> contactOptional = this.contactRepository.findById(cid);
 
@@ -178,9 +178,11 @@ public class UserController {
 
 		// check..
 
-		contact.setUser(null);
-
-		this.contactRepository.delete(contact);
+		User user = this.userRepository.getUserByUserName(principal.getName());
+		
+		user.getContacts().remove(contact);
+		
+		this.userRepository.save(user);
 
 		session.setAttribute("message", new Message("Contact deleted  successfully", "success"));
 
@@ -249,6 +251,20 @@ public class UserController {
 		
 		return "redirect:/user/"+contact.getCid()+"/contact";
 	}
+	
+	
+	//your profile handler
+	
+	@GetMapping("/profile")
+	public String yourProfile(Model model)
+	{
+		model.addAttribute("title", "Profile Page");
+		
+		return "normal/profile";
+	}
+	
+	
+	
 	
 	
 	
