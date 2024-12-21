@@ -1,5 +1,7 @@
 # Smart Contact Manager
 
+**Note:** This repository initially contained all the project files, but due to some issues with version control, the repository was reset, and now this is the current state of the project. The previous commit history is no longer available, but the functionality remains the same.
+
 Smart Contact Manager is a web-based application built using **Spring Boot** and **Thymeleaf** to manage and store contact information. This project allows users to create, update, view, and delete contacts in a user-friendly interface. It is designed to provide an intuitive experience for managing personal contacts, with features like user authentication and password management.
 
 ## Features
