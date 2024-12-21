@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeLeaf.org"
+	th:replace="normal/base::Layout(~{::section})">
+<head>
+<meta charset="UTF-8" />
+<title>This is home page</title>
+
+
+</head>
+<body>
+	<section>
+		<div class="card mr-3 ml-2">
+			<div class="card-body">
+				<h1 class="text-center">Update your contact</h1>
+
+				<!-- Display success or error message -->
+				<div class="alert alert-success" th:if="${message}" role="alert">
+					<span th:text="${message}"></span>
+				</div>
+
+				<div class="container-fluid mt-1">
+					<div class="row">
+						<div class="col-md-8 offset-md-2">
+
+							<form th:object="${contact}" method="POST"
+								th:action="@{/user/process-update}"
+								enctype="multipart/form-data" class="mt-2"
+								novalidate="novalidate">
+								
+								
+								<input type="hidden" th:value="${contact.cid}" name="cid"/>
+								
+
+								<!-- First name -->
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="fa fa-plus"></i></span>
+									</div>
+									<input th:value="${contact.name}" required type="text" id="firstName" th:field="*{name}"
+										placeholder="Enter First Name" class="form-control">
+									<span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+										class="text-danger"></span>
+								</div>
+
+								<!-- Last name -->
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i
+											class="fas fa-user-alt"></i></span>
+									</div>
+									<input th:value="${contact.secondName}" type="text" id="secondName" th:field="*{secondName}"
+										placeholder="Enter Last Name" class="form-control" required>
+									<span th:if="${#fields.hasErrors('secondName')}"
+										th:errors="*{secondName}" class="text-danger"></span>
+								</div>
+
+								<!-- Phone field -->
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="fas fa-phone"></i></span>
+									</div>
+									<input th:value="${contact.phone}" type="number" id="phone" th:field="*{phone}"
+										placeholder="Enter Phone Number" class="form-control" required>
+									<span th:if="${#fields.hasErrors('phone')}"
+										th:errors="*{phone}" class="text-danger"></span>
+								</div>
+
+								<!-- Email field -->
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text">@</span>
+									</div>
+									<input th:value="${contact.email}" type="email" id="email" th:field="*{email}"
+										placeholder="Enter Email" class="form-control" required>
+									<span th:if="${#fields.hasErrors('email')}"
+										th:errors="*{email}" class="text-danger"></span>
+								</div>
+
+								<!-- Work field -->
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i
+											class="fa fa-briefcase"></i></span>
+									</div>
+									<input th:value="${contact.work}" type="text" id="work" th:field="*{work}"
+										placeholder="Enter Work" class="form-control" required>
+									<span th:if="${#fields.hasErrors('work')}" th:errors="*{work}"
+										class="text-danger"></span>
+								</div>
+
+								<!-- Description -->
+								<div class="form-group mb-3">
+									<textarea th:text="${contact.description}" placeholder="Enter contact description"
+										th:field="*{description}" id="mytextarea"
+										class="form-control" rows="4" required></textarea>
+									<span th:if="${#fields.hasErrors('description')}"
+										th:errors="*{description}" class="text-danger"></span>
+								</div>
+
+								<!-- Contact Image -->
+								<div class="container text-center">
+								
+								<img style="width:250px; height:250px;" class="img-fluid my_profile_picture" src="" th:src="@{'/img/'+${contact.image}}" alt=""/>
+								
+								</div>
+								
+								<p class="text-secondary">Choose new profile image</p>
+								
+								<div class="custom-file mb-3">
+									<input type="file" name="profileImage"
+										class="custom-file-input" id="profileImage" required>
+									<label class="custom-file-label" for="profileImage">Choose
+										profile image</label>
+								</div>
+
+								<!-- Submit Button -->
+								<div class="container" style="text-align: center;">
+									<button type="submit" class="btn btn-outline-primary">Save
+										Contact</button>
+								</div>
+							</form>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	<script src="https://cdn.tiny.cloud/1/hz99lt5rdo4d3jka3faj1n4wghic1sr0vukyuus7vf2ija83/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+
+		<script>
+			tinymce.init({
+				selector : '#mytextarea'
+			});
+		</script>
+	</section>
+
+
+
+</body>
+</html>
